@@ -144,7 +144,8 @@ const Home: React.FC = () => {
             {experiences.map((exp) => (
               <div key={exp.id} className="group flex flex-col gap-6 bg-white/[0.03] p-8 rounded-3xl border border-white/5 hover:bg-white/5 transition-all duration-500">
                 <div className="aspect-video overflow-hidden rounded-2xl relative">
-                  <img src={exp.image_url} alt={exp.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                  {/* Fix: changed exp.image_url to exp.imageUrl to match the Experience type and updated mock data */}
+                  <img src={exp.imageUrl} alt={exp.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-black/20"></div>
                 </div>
                 <div>
