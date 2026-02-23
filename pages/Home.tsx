@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  
+
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<any>(null);
   const [highlights, setHighlights] = useState<any[]>([]);
@@ -55,16 +55,16 @@ const Home: React.FC = () => {
     <div className={`transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       {/* Immersive Hero Section with Parallax */}
       <section className="relative h-screen flex items-end justify-start overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center scale-110" 
-          style={{ 
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-110"
+          style={{
             backgroundImage: `url("${settings?.hero_bg_url || 'https://images.unsplash.com/photo-1536431311719-398b6704d40f?auto=format&fit=crop&q=80&w=2000'}")`,
             transform: `translateY(${scrollY * 0.3}px) scale(1.05)`
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A2F1F]/90 via-[#1A2F1F]/20 to-transparent"></div>
         </div>
-        
+
         <div className="relative z-10 p-8 md:p-20 max-w-6xl">
           <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             <h1 className="text-5xl md:text-[110px] text-white leading-[0.9] mb-12 max-w-5xl tracking-tight font-light">
@@ -74,13 +74,13 @@ const Home: React.FC = () => {
               </span>
             </h1>
           </div>
-          
+
           <div className={`transition-all duration-1000 delay-300 transform ${isVisible ? 'translate-y-0 opacity-80' : 'translate-y-10 opacity-0'}`}>
             <p className="text-white text-sm md:text-base tracking-[0.2em] uppercase font-light mb-12 max-w-md">
               {settings?.hero_subtitle || 'Private Luxury farmhouse stay and event estate'}
             </p>
           </div>
-          
+
           <div className={`flex flex-col md:flex-row items-center gap-6 mb-16 transition-all duration-1000 delay-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             <Button variant="secondary" onClick={() => window.open(whatsappUrl, '_blank')}>
               WhatsApp Now
@@ -110,24 +110,44 @@ const Home: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {highlights.map((h) => (
-              <div 
-                key={h.id} 
-                className="group relative h-[300px] md:h-[400px] overflow-hidden rounded-2xl luxury-shadow cursor-pointer"
-                onClick={() => navigate('/gallery')}
-              >
-                <img 
-                  src={h.image_url} 
-                  alt={h.label} 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1A2F1F]/80 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-6">
-                  <span className="text-white text-[10px] uppercase tracking-[0.3em] font-bold">{h.label}</span>
+          <div className="relative group/scroll">
+            <div className="flex overflow-x-auto gap-8 pb-12 snap-x hide-scrollbar scroll-smooth">
+              {highlights.map((h, idx) => (
+                <div
+                  key={h.id}
+                  className={`group flex-shrink-0 flex flex-col items-center gap-6 snap-center transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+                  style={{ transitionDelay: `${idx * 150}ms` }}
+                >
+                  <div
+                    className="relative w-[280px] md:w-[320px] aspect-square overflow-hidden rounded-[40px] luxury-shadow cursor-pointer border border-transparent group-hover:border-[#D4AF37]/50 transition-all duration-700"
+                    onClick={() => navigate('/gallery')}
+                  >
+                    <img
+                      src={h.image_url}
+                      alt={h.label}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A2F1F]/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                    <div className="absolute inset-0 border-[12px] border-white/0 group-hover:border-white/5 transition-all duration-700 rounded-[40px]"></div>
+                  </div>
+                  <div className="text-center group-hover:translate-y-[-8px] transition-transform duration-500">
+                    <span className="text-[#1A2F1F] text-xs uppercase tracking-[0.4em] font-medium opacity-60 group-hover:opacity-100 group-hover:text-[#D4AF37] transition-all">
+                      {h.label}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+
+              {/* Add a few empty paddings for the end of scroll */}
+              <div className="flex-shrink-0 w-8 md:w-16"></div>
+            </div>
+
+            {/* Scroll Indicator Overlay (Subtle) */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {highlights.map((_, i) => (
+                <div key={i} className={`h-1 rounded-full transition-all duration-500 ${i === 0 ? 'w-8 bg-[#D4AF37]' : 'w-2 bg-gray-200'}`}></div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -164,13 +184,13 @@ const Home: React.FC = () => {
       {/* Video Teaser Section */}
       <section className="py-24 px-8 md:px-16">
         <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer" onClick={() => navigate('/gallery')}>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] group-hover:scale-105"
-            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000")' }}
+            style={{ backgroundImage: `url("${settings?.teaser_bg_url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000'}")` }}
           ></div>
           <div className="absolute inset-0 bg-[#1A2F1F]/40 flex flex-col items-center justify-center text-center p-8">
             <div className="w-20 h-20 rounded-full border border-white/40 flex items-center justify-center mb-8 bg-white/10 backdrop-blur-md group-hover:scale-110 transition-transform">
-               <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
             <h3 className="text-white text-3xl md:text-6xl font-editorial mb-4">A Glimpse of Paradise</h3>
             <p className="text-white/60 text-[10px] uppercase tracking-[0.5em] mb-8 font-bold">Press to view film</p>
