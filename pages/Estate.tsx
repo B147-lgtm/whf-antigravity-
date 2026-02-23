@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
@@ -155,38 +154,41 @@ const Estate: React.FC = () => {
       {/* Editorial Amenities Grid */}
       <section className="py-40 px-8 md:px-20">
         <div className="max-w-7xl mx-auto space-y-48">
-          {sections.map((section, idx) => (
-            <div key={idx} className={`grid grid-cols-1 lg:grid-cols-12 gap-16 items-start ${idx % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
-              <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
-                <div className="sticky top-40">
-                  <span className="text-[10px] font-bold tracking-[0.6em] text-[#D4AF37] uppercase mb-6 block">{section.tag}</span>
-                  <h2 className="text-5xl md:text-7xl font-serif text-[#1A2F1F] mb-10 leading-[0.9]">{section.title}</h2>
-                  <p className="text-lg text-gray-500 font-light leading-relaxed max-w-sm mb-12">
-                    {section.description}
-                  </p>
-                  <div className="flex items-center gap-4 text-[#1A2F1F]">
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Discover Details</span>
-                    <div className="w-16 h-[1px] bg-[#1A2F1F]/20"></div>
+          {sections.map((section, idx) => {
+            const items = Array.isArray(section.items) ? section.items : (typeof section.items === 'string' ? JSON.parse(section.items) : []);
+            return (
+              <div key={idx} className={`grid grid-cols-1 lg:grid-cols-12 gap-16 items-start ${idx % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
+                <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
+                  <div className="sticky top-40">
+                    <span className="text-[10px] font-bold tracking-[0.6em] text-[#D4AF37] uppercase mb-6 block">{section.tag}</span>
+                    <h2 className="text-5xl md:text-7xl font-serif text-[#1A2F1F] mb-10 leading-[0.9]">{section.title}</h2>
+                    <p className="text-lg text-gray-500 font-light leading-relaxed max-w-sm mb-12">
+                      {section.description}
+                    </p>
+                    <div className="flex items-center gap-4 text-[#1A2F1F]">
+                      <span className="text-[10px] font-bold uppercase tracking-widest">Discover Details</span>
+                      <div className="w-16 h-[1px] bg-[#1A2F1F]/20"></div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className={`lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
-                {section.items.map((item, i) => (
-                  <div key={i} className="group border-t border-[#1A2F1F]/5 pt-8 hover:border-[#D4AF37] transition-all duration-700">
-                    <div className="flex justify-between items-start mb-6">
-                      <span className="text-[10px] font-bold tracking-[0.4em] text-[#1A2F1F]/20 group-hover:text-[#D4AF37] transition-colors">0{i + 1}</span>
-                      <div className="w-2 h-2 rounded-full border border-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className={`lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
+                  {items.map((item: any, i: number) => (
+                    <div key={i} className="group border-t border-[#1A2F1F]/5 pt-8 hover:border-[#D4AF37] transition-all duration-700">
+                      <div className="flex justify-between items-start mb-6">
+                        <span className="text-[10px] font-bold tracking-[0.4em] text-[#1A2F1F]/20 group-hover:text-[#D4AF37] transition-colors">0{i + 1}</span>
+                        <div className="w-2 h-2 rounded-full border border-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                      <h4 className="text-xl font-serif text-[#1A2F1F] mb-4 group-hover:pl-2 transition-all duration-500">{item.label}</h4>
+                      <p className="text-sm text-gray-400 font-light leading-relaxed">
+                        {item.detail}
+                      </p>
                     </div>
-                    <h4 className="text-xl font-serif text-[#1A2F1F] mb-4 group-hover:pl-2 transition-all duration-500">{item.label}</h4>
-                    <p className="text-sm text-gray-400 font-light leading-relaxed">
-                      {item.detail}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
