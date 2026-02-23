@@ -2,52 +2,47 @@
 import React from 'react';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
+import { getEstateSections, getEstateProtocols, getContentBlocks } from '../lib/api';
 
 const Estate: React.FC = () => {
   const navigate = useNavigate();
+  const [sections, setSections] = React.useState<any[]>([]);
+  const [protocols, setProtocols] = React.useState<any[]>([]);
+  const [blocks, setBlocks] = React.useState<any>({});
+  const [loading, setLoading] = React.useState(true);
 
-  const sections = [
-    {
-      title: "Accommodations",
-      tag: "Residential",
-      description: "A sanctuary of rest where Rajasthani heritage meets modern minimalist luxury. Each suite is a private haven.",
-      items: [
-        { label: "Presidential Suite", detail: "1200+ sq. ft. of pure luxury. Features a private sun deck, walk-in closet, and panoramic lawn views." },
-        { label: "8 Deluxe Suites", detail: "Individually curated interiors with king-sized royal bedding and curated art pieces." },
-        { label: "20 Person Capacity", detail: "Optimized for large-scale family gatherings without compromising on individual privacy." },
-        { label: "Open-Air Baths", detail: "Select suites feature private outdoor showers under the canopy of Jaipur's stars." }
-      ]
-    },
-    {
-      title: "Leisure & Grounds",
-      tag: "Recreation",
-      description: "Sprawling across acres of manicured greens, our grounds offer diverse spaces for reflection and celebration.",
-      items: [
-        { label: "The Infinity Pool", detail: "Temperature-controlled azure waters with a submerged lounging deck and poolside service." },
-        { label: "The Vesper Garden", detail: "An intimate bar garden designed for sunset cocktails and moonlit conversations." },
-        { label: "Three Grand Lawns", detail: "Versatile emerald carpets capable of hosting up to 200 guests for private events." },
-        { label: "The Fire Pit", detail: "A sunken stone hearth for evening storytelling, toasted marshmallows, and winter warmth." }
-      ]
-    },
-    {
-      title: "Service & Gastronomy",
-      tag: "Hospitality",
-      description: "Our dedicated estate team ensures every whim is catered to, from gourmet dining to seamless logistics.",
-      items: [
-        { label: "Show Kitchen", detail: "A state-of-the-art culinary stage for private chefs or family cooking sessions." },
-        { label: "24/7 Concierge", detail: "Personalized assistance for local tours, transportation, and on-site requests." },
-        { label: "Grand Lounge", detail: "A double-height living hall with curated library and high-fidelity sound systems." },
-        { label: "Private Security", detail: "Discreet, professional 24-hour estate monitoring for total peace of mind." }
-      ]
-    }
-  ];
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [sectionsData, protocolsData, blocksData] = await Promise.all([
+          getEstateSections(),
+          getEstateProtocols(),
+          getContentBlocks('Estate')
+        ]);
 
-  const protocols = [
-    { title: "Exclusive Access", text: "The estate is exclusively yours. We never host overlapping groups, ensuring total privacy." },
-    { title: "Curated Sound", text: "We celebrate life, but respect the land. High-decibel music is moved to our soundproof basement after 10 PM." },
-    { title: "External Vendors", text: "We maintain high standards. External catering and decor require prior approval by our estate manager." },
-    { title: "Land Stewardship", text: "Guests are guardians of the estate. We ask for mindful enjoyment of our rare flora and fixtures." }
-  ];
+        setSections(sectionsData);
+        setProtocols(protocolsData);
+
+        // Convert blocks array to object for easier access
+        const blockObj = blocksData.reduce((acc: any, block: any) => {
+          acc[block.section_key] = block;
+          return acc;
+        }, {});
+        setBlocks(blockObj);
+      } catch (err) {
+        console.error("Estate load error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) return null;
+
+  const heroBlock = blocks.hero || { title: "Designed for Distinction", description: "Wood Heaven Farms is not just a destination; it is a meticulously crafted lifestyle. Every suite, garden, and service is a testament to the art of fine living." };
+  const signatureBlock = blocks.signature_wing || { title: "The Presidential Suite", description: "Our crown jewel. A massive residential suite featuring a double-height ceiling, bespoke handcrafted furniture, and a private balcony that offers the finest view of the sunrise over our infinity pool." };
+  const manifestoBlock = blocks.manifesto || { title: "The Estate Manifesto", description: "Our Ethos" };
 
   return (
     <div className="min-h-screen bg-[#FDFCFB]">
@@ -62,13 +57,13 @@ const Estate: React.FC = () => {
                 <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.5em] uppercase">The Estate Portfolio</span>
               </div>
               <h1 className="text-6xl md:text-[120px] font-serif leading-[0.85] text-[#1A2F1F] mb-12">
-                Designed for <br /> <span className="italic font-editorial text-[#D4AF37]">Distinction</span>
+                {heroBlock.title.split(' ')[0]} <br /> <span className="italic font-editorial text-[#D4AF37]">{heroBlock.title.split(' ').slice(1).join(' ')}</span>
               </h1>
               <p className="text-gray-400 text-xl font-light leading-relaxed max-w-2xl border-l border-[#1A2F1F]/10 pl-8 ml-2">
-                Wood Heaven Farms is not just a destination; it is a meticulously crafted lifestyle. Every suite, garden, and service is a testament to the art of fine living.
+                {heroBlock.description}
               </p>
             </div>
-            
+
             <div className="bg-white p-10 rounded-[32px] border border-[#1A2F1F]/5 luxury-shadow w-full lg:w-80 relative z-10">
               <div className="space-y-6">
                 <div>
@@ -83,7 +78,7 @@ const Estate: React.FC = () => {
                   <span className="text-[9px] uppercase tracking-[0.3em] text-gray-400 block mb-2">Maximum Occupancy</span>
                   <span className="text-xl font-serif text-[#1A2F1F]">20 Adults <span className="text-xs font-sans text-gray-400 uppercase tracking-widest ml-1">Stay</span></span>
                 </div>
-                <button 
+                <button
                   onClick={() => navigate('/enquiry')}
                   className="w-full py-4 bg-[#1A2F1F] text-[#D4AF37] text-[10px] uppercase tracking-[0.4em] font-bold rounded-xl hover:bg-black transition-colors"
                 >
@@ -101,16 +96,16 @@ const Estate: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-center">
             <div className="lg:col-span-7 relative">
               <div className="relative aspect-[4/3] rounded-[40px] overflow-hidden luxury-shadow z-20">
-                <img 
-                  src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Presidential Suite Bedroom" 
+                <img
+                  src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200"
+                  alt="Presidential Suite Bedroom"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute -bottom-16 -right-16 w-1/2 aspect-square rounded-[30px] overflow-hidden border-[12px] border-[#1A2F1F] shadow-2xl z-30 hidden md:block">
-                <img 
-                  src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800" 
-                  alt="Presidential Suite Bath" 
+                <img
+                  src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800"
+                  alt="Presidential Suite Bath"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -118,13 +113,13 @@ const Estate: React.FC = () => {
                 01
               </div>
             </div>
-            
+
             <div className="lg:col-span-5 space-y-12">
               <header>
                 <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.5em] uppercase mb-4 block">The Signature Wing</span>
-                <h2 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">The Presidential <br /><span className="italic font-editorial text-[#D4AF37]">Suite</span></h2>
+                <h2 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">{signatureBlock.title}</h2>
                 <p className="text-white/60 text-lg font-light leading-relaxed">
-                  Our crown jewel. A massive residential suite featuring a double-height ceiling, bespoke handcrafted furniture, and a private balcony that offers the finest view of the sunrise over our infinity pool.
+                  {signatureBlock.description}
                 </p>
               </header>
 
@@ -175,7 +170,7 @@ const Estate: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className={`lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
                 {section.items.map((item, i) => (
                   <div key={i} className="group border-t border-[#1A2F1F]/5 pt-8 hover:border-[#D4AF37] transition-all duration-700">
@@ -199,8 +194,8 @@ const Estate: React.FC = () => {
       <section className="py-40 bg-[#F5F3F0] overflow-hidden relative">
         <div className="max-w-4xl mx-auto px-8 md:px-20 text-center relative z-10">
           <header className="mb-24">
-            <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.6em] uppercase mb-6 block">Our Ethos</span>
-            <h2 className="text-5xl md:text-8xl font-serif text-[#1A2F1F] leading-tight">The Estate <br /><span className="italic font-editorial">Manifesto</span></h2>
+            <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.6em] uppercase mb-6 block">{manifestoBlock.description}</span>
+            <h2 className="text-5xl md:text-8xl font-serif text-[#1A2F1F] leading-tight">{manifestoBlock.title}</h2>
           </header>
 
           <div className="space-y-16">
@@ -226,7 +221,7 @@ const Estate: React.FC = () => {
             <p className="mt-8 text-[9px] uppercase tracking-[0.4em] text-gray-400 font-bold">Inquiry Response Guaranteed within 6 Hours</p>
           </div>
         </div>
-        
+
         {/* Decorative Elements */}
         <div className="absolute top-1/2 left-0 w-64 h-[1px] bg-[#D4AF37]/20 -rotate-45"></div>
         <div className="absolute bottom-1/4 right-0 w-96 h-[1px] bg-[#D4AF37]/20 rotate-12"></div>
@@ -234,9 +229,9 @@ const Estate: React.FC = () => {
 
       {/* Cinematic Visual Break */}
       <section className="h-screen relative overflow-hidden flex items-center justify-center">
-        <img 
-          src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000" 
-          alt="Estate View" 
+        <img
+          src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000"
+          alt="Estate View"
           className="absolute inset-0 w-full h-full object-cover grayscale brightness-[0.3]"
         />
         <div className="relative z-10 text-center px-8">

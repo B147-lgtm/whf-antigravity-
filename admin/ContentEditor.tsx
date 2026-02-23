@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Save, Plus, Trash2, Loader2, Link as LinkIcon, Upload } from 'lucide-react';
+import { Save, Plus, Trash2, Loader2, Link as LinkIcon, Upload, MapPin, Star, Sparkles, Settings, MessageSquare } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
 interface ContentEditorProps {
     tableName: string;
     title: string;
-    fields: { name: string; label: string; type: 'text' | 'textarea' | 'url' | 'number' }[];
+    fields: { name: string; label: string; type: 'text' | 'textarea' | 'url' | 'number' | 'json' }[];
     isSingle?: boolean; // For tables like site_settings with only one row
 }
 
@@ -109,7 +109,7 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
                                     const uploadMode = uploadModes[`${rowId}-${field.name}`];
 
                                     return (
-                                        <div key={field.name} className={field.type === 'textarea' || isUrlField ? 'md:col-span-2' : ''}>
+                                        <div key={field.name} className={field.type === 'textarea' || field.type === 'json' || isUrlField ? 'md:col-span-2' : ''}>
                                             <div className="flex items-center justify-between mb-2">
                                                 <label className="block text-sm font-semibold text-neutral-600 uppercase tracking-wider">{field.label}</label>
                                                 {isUrlField && (
@@ -123,11 +123,18 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
                                                 )}
                                             </div>
 
-                                            {field.type === 'textarea' ? (
+                                            {field.type === 'textarea' || field.type === 'json' ? (
                                                 <textarea
-                                                    value={row[field.name] || ''}
-                                                    onChange={(e) => updateField(index, field.name, e.target.value)}
-                                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-amber-500 outline-none h-32"
+                                                    value={field.type === 'json' ? (typeof row[field.name] === 'object' ? JSON.stringify(row[field.name], null, 2) : row[field.name]) : (row[field.name] || '')}
+                                                    onChange={(e) => {
+                                                        let val = e.target.value;
+                                                        if (field.type === 'json') {
+                                                            try { val = JSON.parse(e.target.value); } catch (e) { /* keep as string while typing */ }
+                                                        }
+                                                        updateField(index, field.name, val);
+                                                    }}
+                                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-amber-500 outline-none h-32 font-mono text-xs"
+                                                    placeholder={field.type === 'json' ? '[{"label": "Item", "detail": "Description"}]' : ''}
                                                 />
                                             ) : isUrlField && uploadMode ? (
                                                 <ImageUpload
