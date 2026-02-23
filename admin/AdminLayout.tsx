@@ -31,6 +31,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { path: '/admin/gallery', label: 'Gallery', icon: Image },
         { path: '/admin/highlights', label: 'Home Highlights', icon: Star },
         { path: '/admin/experiences', label: 'Experiences', icon: Sparkles },
+        { path: '/admin/location', label: 'Location Details', icon: MapPin },
+        { path: '/admin/estate-sections', label: 'Estate Sections', icon: Star },
+        { path: '/admin/estate-protocols', label: 'Estate Manifesto', icon: Sparkles },
+        { path: '/admin/blocks', label: 'Static Blocks', icon: Settings },
         { path: '/admin/testimonials', label: 'Testimonials', icon: MessageSquare },
         { path: '/admin/enquiries', label: 'Enquiries', icon: MessageSquare },
     ];

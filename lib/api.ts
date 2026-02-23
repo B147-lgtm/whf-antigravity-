@@ -1,12 +1,12 @@
 
 import { supabase } from './supabaseClient';
-import { 
-  SITE_SETTINGS, 
-  HIGHLIGHTS, 
-  EXPERIENCES, 
-  TESTIMONIALS, 
-  GALLERY_ITEMS, 
-  LOCATION_SETTINGS 
+import {
+  SITE_SETTINGS,
+  HIGHLIGHTS,
+  EXPERIENCES,
+  TESTIMONIALS,
+  GALLERY_ITEMS,
+  LOCATION_SETTINGS
 } from '../data/mockData';
 
 export const getSiteSettings = async () => {
@@ -52,7 +52,7 @@ export const getTestimonials = async () => {
 
 export const getGalleryMedia = async (category?: string) => {
   if (!supabase) {
-    return category && category !== 'All' 
+    return category && category !== 'All'
       ? GALLERY_ITEMS.filter(item => item.category === category)
       : GALLERY_ITEMS;
   }
@@ -85,5 +85,35 @@ export const createEnquiry = async (payload: any) => {
     .from('enquiries')
     .insert([{ ...payload, page_source: 'website' }]);
   if (error) throw error;
+  return data;
+};
+
+export const getEstateSections = async () => {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('estate_sections')
+    .select('*')
+    .order('display_order', { ascending: true });
+  if (error) return [];
+  return data;
+};
+
+export const getEstateProtocols = async () => {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('estate_protocols')
+    .select('*')
+    .order('display_order', { ascending: true });
+  if (error) return [];
+  return data;
+};
+
+export const getContentBlocks = async (pageName: string) => {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('content_blocks')
+    .select('*')
+    .eq('page_name', pageName);
+  if (error) return [];
   return data;
 };

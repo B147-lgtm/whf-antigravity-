@@ -61,6 +61,31 @@ const App: React.FC = () => {
         { name: 'label', label: 'Label', type: 'text' },
         { name: 'image_url', label: 'Image URL', type: 'url' },
       ]} /></AdminLayout></AdminGuard>} />
+      <Route path="/admin/location" element={<AdminGuard><AdminLayout><ContentEditor tableName="location_settings" title="Location Details" isSingle fields={[
+        { name: 'short_area', label: 'Short Area (City/Area)', type: 'text' },
+        { name: 'address', label: 'Full Address', type: 'textarea' },
+        { name: 'airport_time', label: 'Time to Airport', type: 'text' },
+        { name: 'railway_time', label: 'Time to Railway', type: 'text' },
+        { name: 'city_time', label: 'Time to City Center', type: 'text' },
+      ]} /></AdminLayout></AdminGuard>} />
+      <Route path="/admin/estate-sections" element={<AdminGuard><AdminLayout><ContentEditor tableName="estate_sections" title="Estate Sections" fields={[
+        { name: 'title', label: 'Title', type: 'text' },
+        { name: 'tag', label: 'Tag (e.g. Residential)', type: 'text' },
+        { name: 'description', label: 'Description', type: 'textarea' },
+        { name: 'display_order', label: 'Order', type: 'number' },
+      ]} /></AdminLayout></AdminGuard>} />
+      <Route path="/admin/estate-protocols" element={<AdminGuard><AdminLayout><ContentEditor tableName="estate_protocols" title="Estate Manifesto" fields={[
+        { name: 'title', label: 'Title', type: 'text' },
+        { name: 'text', label: 'Content', type: 'textarea' },
+        { name: 'display_order', label: 'Order', type: 'number' },
+      ]} /></AdminLayout></AdminGuard>} />
+      <Route path="/admin/blocks" element={<AdminGuard><AdminLayout><ContentEditor tableName="content_blocks" title="Content Blocks" fields={[
+        { name: 'page_name', label: 'Page', type: 'text' },
+        { name: 'section_key', label: 'Section ID', type: 'text' },
+        { name: 'title', label: 'Title', type: 'text' },
+        { name: 'description', label: 'Description', type: 'textarea' },
+        { name: 'image_url', label: 'Image URL', type: 'url' },
+      ]} /></AdminLayout></AdminGuard>} />
     </Routes>
   );
 };
