@@ -1,9 +1,6 @@
 -- Wood Heaven Farms - Universal Management Setup
 
--- 1. Location Settings (Already exists, but adding a check for columns)
--- ALTER TABLE location_settings ADD COLUMN IF NOT EXISTS about_text TEXT DEFAULT 'Situated in the serene Green Triveni enclave, Wood Heaven Farms offers a peaceful escape with convenient access to Jaipur''s main landmarks.';
-
--- 2. Estate Sections (Accommodations, Leisure, Service)
+-- 1. Tables Creation
 CREATE TABLE IF NOT EXISTS estate_sections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
@@ -14,7 +11,6 @@ CREATE TABLE IF NOT EXISTS estate_sections (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 3. Estate Protocols/Manifesto
 CREATE TABLE IF NOT EXISTS estate_protocols (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
@@ -23,7 +19,6 @@ CREATE TABLE IF NOT EXISTS estate_protocols (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 4. Content Blocks (For Hero sections, descriptions, etc.)
 CREATE TABLE IF NOT EXISTS content_blocks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     page_name TEXT NOT NULL,
@@ -41,12 +36,19 @@ ALTER TABLE estate_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE estate_protocols ENABLE ROW LEVEL SECURITY;
 ALTER TABLE content_blocks ENABLE ROW LEVEL SECURITY;
 
--- Public Read Access
+-- Clean up existing policies to avoid "already exists" errors
+DROP POLICY IF EXISTS "Public Read Access" ON estate_sections;
+DROP POLICY IF EXISTS "Public Read Access" ON estate_protocols;
+DROP POLICY IF EXISTS "Public Read Access" ON content_blocks;
+DROP POLICY IF EXISTS "Admin All Access" ON estate_sections;
+DROP POLICY IF EXISTS "Admin All Access" ON estate_protocols;
+DROP POLICY IF EXISTS "Admin All Access" ON content_blocks;
+
+-- Recreation of Policies
 CREATE POLICY "Public Read Access" ON estate_sections FOR SELECT USING (true);
 CREATE POLICY "Public Read Access" ON estate_protocols FOR SELECT USING (true);
 CREATE POLICY "Public Read Access" ON content_blocks FOR SELECT USING (true);
 
--- Admin All Access
 CREATE POLICY "Admin All Access" ON estate_sections FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Admin All Access" ON estate_protocols FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Admin All Access" ON content_blocks FOR ALL USING (auth.role() = 'authenticated');
