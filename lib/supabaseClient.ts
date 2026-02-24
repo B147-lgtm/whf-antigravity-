@@ -12,7 +12,7 @@ const getEnvVar = (key: string): string | undefined => {
     if (metaEnv && metaEnv[key]) {
       return metaEnv[key];
     }
-    
+
     // Check process.env (Node/CommonJS/Bundlers)
     const procEnv = (globalThis as any).process?.env;
     if (procEnv && procEnv[key]) {
@@ -27,6 +27,11 @@ const getEnvVar = (key: string): string | undefined => {
 const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
 
+console.log("Supabase Initialization:", {
+  url: supabaseUrl ? `${supabaseUrl.substring(0, 10)}...` : 'MISSING',
+  hasKey: !!supabaseAnonKey
+});
+
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 /**
@@ -34,5 +39,5 @@ export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
  * If not, it returns null, and the API layer will gracefully fallback to mock data.
  */
 export const supabase = (isSupabaseConfigured && supabaseUrl && supabaseAnonKey)
-  ? createClient(supabaseUrl, supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
