@@ -10,9 +10,9 @@ import {
 } from '../data/mockData';
 
 
-const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number = 5000): Promise<T> => {
+const withTimeout = async <T>(promise: Promise<T> | any, timeoutMs: number = 5000): Promise<T> => {
   return Promise.race([
-    promise,
+    promise as Promise<T>,
     new Promise<T>((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeoutMs))
   ]);
 };
@@ -20,9 +20,10 @@ const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number = 5000): Pr
 export const getSiteSettings = async () => {
   if (!supabase) return SITE_SETTINGS;
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('site_settings').select('*').eq('id', 1).single()
     );
+    const { data, error } = response;
     if (error || !data) return SITE_SETTINGS;
     return data;
   } catch (e) {
@@ -34,9 +35,10 @@ export const getSiteSettings = async () => {
 export const getHomeHighlights = async () => {
   if (!supabase) return HIGHLIGHTS;
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('home_highlights').select('*').order('created_at', { ascending: true })
     );
+    const { data, error } = response;
     if (error || !data) return HIGHLIGHTS;
     return data;
   } catch (e) {
@@ -47,9 +49,10 @@ export const getHomeHighlights = async () => {
 export const getExperiences = async () => {
   if (!supabase) return EXPERIENCES;
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('experiences').select('*').order('created_at', { ascending: true })
     );
+    const { data, error } = response;
     if (error || !data) return EXPERIENCES;
     return data;
   } catch (e) {
@@ -60,9 +63,10 @@ export const getExperiences = async () => {
 export const getTestimonials = async () => {
   if (!supabase) return TESTIMONIALS;
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('testimonials').select('*').order('created_at', { ascending: true })
     );
+    const { data, error } = response;
     if (error || !data) return TESTIMONIALS;
     return data;
   } catch (e) {
@@ -81,7 +85,8 @@ export const getGalleryMedia = async (category?: string) => {
     if (category && category !== 'All') {
       query = query.eq('category', category);
     }
-    const { data, error } = await withTimeout(query.order('created_at', { ascending: false }));
+    const response: any = await withTimeout(query.order('created_at', { ascending: false }));
+    const { data, error } = response;
     if (error || !data) return GALLERY_ITEMS;
     return data;
   } catch (e) {
@@ -92,9 +97,10 @@ export const getGalleryMedia = async (category?: string) => {
 export const getLocationSettings = async () => {
   if (!supabase) return LOCATION_SETTINGS;
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('location_settings').select('*').eq('id', 1).single()
     );
+    const { data, error } = response;
     if (error || !data) return LOCATION_SETTINGS;
     return data;
   } catch (e) {
@@ -117,9 +123,10 @@ export const createEnquiry = async (payload: any) => {
 export const getEstateSections = async () => {
   if (!supabase) return [];
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('estate_sections').select('*').order('display_order', { ascending: true })
     );
+    const { data, error } = response;
     if (error || !data) return [];
     return data;
   } catch (e) {
@@ -130,9 +137,10 @@ export const getEstateSections = async () => {
 export const getEstateProtocols = async () => {
   if (!supabase) return [];
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('estate_protocols').select('*').order('display_order', { ascending: true })
     );
+    const { data, error } = response;
     if (error || !data) return [];
     return data;
   } catch (e) {
@@ -143,9 +151,10 @@ export const getEstateProtocols = async () => {
 export const getContentBlocks = async (pageName: string) => {
   if (!supabase) return [];
   try {
-    const { data, error } = await withTimeout(
+    const response: any = await withTimeout(
       supabase.from('content_blocks').select('*').eq('page_name', pageName)
     );
+    const { data, error } = response;
     if (error || !data) return [];
     return data;
   } catch (e) {
