@@ -36,13 +36,15 @@ const supabaseUrl =
   getViteEnv('VITE_SUPABASE_URL') ||
   getProcessEnv('VITE_SUPABASE_URL') ||
   getProcessEnv('SUPABASE_URL') ||
-  getProcessEnv('NEXT_PUBLIC_SUPABASE_URL');
+  getProcessEnv('NEXT_PUBLIC_SUPABASE_URL') ||
+  'https://dvktzelzteixqiophgwl.supabase.co';
 
 const supabaseAnonKey =
   getViteEnv('VITE_SUPABASE_ANON_KEY') ||
   getProcessEnv('VITE_SUPABASE_ANON_KEY') ||
   getProcessEnv('SUPABASE_ANON_KEY') ||
-  getProcessEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  getProcessEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2a3R6ZWx6dGVpeHFpb3BoZ3dsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4MDU4OTMsImV4cCI6MjA4NzM4MTg5M30.EMitfmlaixfcS83toOx0JLUdZvv32-REiHdHnZsNM-Q';
 
 console.log("Supabase Initialization:", {
   url: supabaseUrl ? `${supabaseUrl.substring(0, 10)}...` : 'MISSING',
