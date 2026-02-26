@@ -1,0 +1,4 @@
+data/mockData.ts(44,105): error TS2561: Object literal may only specify known properties, but 'image_url' does not exist in type 'Experience'. Did you mean to write 'imageUrl'?
+data/mockData.ts(45,103): error TS2561: Object literal may only specify known properties, but 'image_url' does not exist in type 'Experience'. Did you mean to write 'imageUrl'?
+data/mockData.ts(46,99): error TS2561: Object literal may only specify known properties, but 'image_url' does not exist in type 'Experience'. Did you mean to write 'imageUrl'?
+data/mockData.ts(47,98): error TS2561: Object literal may only specify known properties, but 'image_url' does not exist in type 'Experience'. Did you mean to write 'imageUrl'?

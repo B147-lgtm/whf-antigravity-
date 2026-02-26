@@ -1,5 +1,26 @@
-
 import { supabase } from './supabaseClient';
+
+export interface SiteSettings {
+  id?: number;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_bg_url: string;
+  teaser_bg_url: string;
+  whatsapp_number: string;
+  whatsapp_prefill: string;
+}
+
+export interface ContactMessage {
+  id?: number;
+  name: string;
+  email?: string;
+  phone: string;
+  date?: string;
+  guest_count?: number;
+  event_type: string;
+  message: string;
+  created_at?: string;
+}
 import {
   SITE_SETTINGS,
   HIGHLIGHTS,

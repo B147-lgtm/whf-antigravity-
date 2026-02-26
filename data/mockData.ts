@@ -40,7 +40,6 @@ export const HIGHLIGHTS = [
 ];
 
 export const EXPERIENCES: Experience[] = [
-  // Fix: changed image_url to imageUrl to match Experience type definition
   { id: 'e1', title: 'Luxury Staycations', description: 'Escape the city chaos in our private suites.', image_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600' },
   { id: 'e2', title: 'Haldi & Mehendi', description: 'Traditional vibes meets modern luxury setups.', image_url: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600' },
   { id: 'e3', title: 'Cocktail Nights', description: 'Glamorous evenings under the starlit sky.', image_url: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&q=80&w=600' },

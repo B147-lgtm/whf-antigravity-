@@ -12,7 +12,7 @@ export interface Experience {
   id: string;
   title: string;
   description: string;
-  imageUrl: string;
+  image_url: string;
 }
 
 export interface Testimonial {
