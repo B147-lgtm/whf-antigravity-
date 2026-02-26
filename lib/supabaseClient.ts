@@ -46,9 +46,13 @@ const supabaseAnonKey =
   getProcessEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2a3R6ZWx6dGVpeHFpb3BoZ3dsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4MDU4OTMsImV4cCI6MjA4NzM4MTg5M30.EMitfmlaixfcS83toOx0JLUdZvv32-REiHdHnZsNM-Q';
 
-console.log("Supabase Initialization:", {
-  url: supabaseUrl ? `${supabaseUrl.substring(0, 10)}...` : 'MISSING',
-  hasKey: !!supabaseAnonKey
+console.log("Supabase Initialization Diagnostics:", {
+  url: supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  envViteUrl: getViteEnv('VITE_SUPABASE_URL'),
+  procViteUrl: getProcessEnv('VITE_SUPABASE_URL'),
+  procUrl: getProcessEnv('SUPABASE_URL'),
+  procNextUrl: getProcessEnv('NEXT_PUBLIC_SUPABASE_URL')
 });
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
