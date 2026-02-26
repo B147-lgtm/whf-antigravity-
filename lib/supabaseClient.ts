@@ -32,12 +32,9 @@ const getProcessEnv = (key: string) => {
   return undefined;
 };
 
-const supabaseUrl =
-  getViteEnv('VITE_SUPABASE_URL') ||
-  getProcessEnv('VITE_SUPABASE_URL') ||
-  getProcessEnv('SUPABASE_URL') ||
-  getProcessEnv('NEXT_PUBLIC_SUPABASE_URL') ||
-  'https://dvktzelzteixqiophgwl.supabase.co';
+const supabaseUrl = typeof window !== 'undefined'
+  ? `${window.location.origin}/supabase-api`
+  : 'https://dvktzelzteixqiophgwl.supabase.co';
 
 const supabaseAnonKey =
   getViteEnv('VITE_SUPABASE_ANON_KEY') ||
