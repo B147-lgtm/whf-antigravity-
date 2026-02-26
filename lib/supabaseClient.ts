@@ -2,30 +2,47 @@
 import { createClient } from "@supabase/supabase-js";
 
 /**
- * Safely retrieves environment variables from common JS environments.
- * Checks both Vite's `import.meta.env` and the standard `process.env`.
+ * Safely retrieves environment variables from common environments.
+ * We must use explicit import.meta.env.VITE_... for Vite static replacement
+ * during production builds.
  */
-const getEnvVar = (key: string): string | undefined => {
-  try {
-    // Check Vite/ESM environment
-    const metaEnv = (import.meta as any).env;
-    if (metaEnv && metaEnv[key]) {
-      return metaEnv[key];
-    }
 
-    // Check process.env (Node/CommonJS/Bundlers)
-    const procEnv = (globalThis as any).process?.env;
-    if (procEnv && procEnv[key]) {
-      return procEnv[key];
+// 1. Vite Environment (These must be exactly authored as literal import.meta.env.VITE_...)
+const getViteEnv = (key: 'VITE_SUPABASE_URL' | 'VITE_SUPABASE_ANON_KEY') => {
+  try {
+    if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+      if (key === 'VITE_SUPABASE_URL') return (import.meta as any).env.VITE_SUPABASE_URL;
+      if (key === 'VITE_SUPABASE_ANON_KEY') return (import.meta as any).env.VITE_SUPABASE_ANON_KEY;
     }
   } catch (e) {
-    // Silently fail and return undefined if access is restricted
+    // Ignore
   }
   return undefined;
 };
 
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
+// 2. Node/Vercel standard fallback (process.env)
+const getProcessEnv = (key: string) => {
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env[key];
+    }
+  } catch (e) {
+    // Ignore
+  }
+  return undefined;
+};
+
+const supabaseUrl =
+  getViteEnv('VITE_SUPABASE_URL') ||
+  getProcessEnv('VITE_SUPABASE_URL') ||
+  getProcessEnv('SUPABASE_URL') ||
+  getProcessEnv('NEXT_PUBLIC_SUPABASE_URL');
+
+const supabaseAnonKey =
+  getViteEnv('VITE_SUPABASE_ANON_KEY') ||
+  getProcessEnv('VITE_SUPABASE_ANON_KEY') ||
+  getProcessEnv('SUPABASE_ANON_KEY') ||
+  getProcessEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
 console.log("Supabase Initialization:", {
   url: supabaseUrl ? `${supabaseUrl.substring(0, 10)}...` : 'MISSING',
