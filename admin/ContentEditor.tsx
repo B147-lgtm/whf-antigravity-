@@ -27,10 +27,15 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
 
     const fetchData = async () => {
         setLoading(true);
-        const { data, error } = await supabase!
-            .from(tableName)
-            .select('*')
-            .order(isSingle ? 'id' : 'created_at', { ascending: true });
+        let query = supabase!.from(tableName).select('*');
+
+        if (tableName === 'gallery_media') {
+            query = query.order('display_order', { ascending: true, nullsFirst: false }).order('created_at', { ascending: false });
+        } else {
+            query = query.order(isSingle ? 'id' : 'created_at', { ascending: true });
+        }
+
+        const { data, error } = await query;
 
         if (error) setError(error.message);
         else setData(data || []);
@@ -266,6 +271,56 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
                     );
                 })}
             </div>
+
+            {/* Live Gallery Preview (Only for Gallery) */}
+            {tableName === 'gallery_media' && data.length > 0 && (
+                <div className="mt-16 bg-white p-8 rounded-xl shadow-sm border border-neutral-200">
+                    <div className="mb-6">
+                        <h3 className="text-xl font-bold text-neutral-900 border-b border-neutral-100 pb-4">Live Gallery Preview</h3>
+                        <p className="text-sm text-neutral-500 mt-2">This is exactly how the images will be ordered on the live website.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {data.map((item, index) => {
+                            if (!item.url || item.url.trim() === '') return null;
+                            const isVideo = item.type === 'video';
+                            const previewSrc = isVideo && item.thumbnail ? item.thumbnail : item.url;
+
+                            return (
+                                <div key={item.id || `preview-${index}`} className="relative group rounded-lg overflow-hidden border border-neutral-200 aspect-[4/3] bg-neutral-100">
+                                    <img
+                                        src={previewSrc}
+                                        alt={item.label || "Gallery item"}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        onError={(e) => {
+                                            if (isVideo && !item.thumbnail) {
+                                                // Simple fallback for videos without thumbnails
+                                                e.currentTarget.style.display = 'none';
+                                            } else {
+                                                e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
+                                            }
+                                        }}
+                                    />
+                                    {isVideo && !item.thumbnail && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-neutral-900/10">
+                                            <div className="w-12 h-12 bg-white/80 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                                <svg className="w-5 h-5 text-neutral-900 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white px-2 py-1 rounded text-xs font-mono font-bold">
+                                        #{item.display_order || 0}
+                                    </div>
+                                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <p className="text-white text-xs font-bold truncate">{item.category || 'Categorized'}</p>
+                                        <p className="text-white/80 text-[10px] truncate">{item.label}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
