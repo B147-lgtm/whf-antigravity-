@@ -13,6 +13,7 @@ import Enquiry from './pages/Enquiry';
 import Login from './admin/Login';
 import Dashboard from './admin/Dashboard';
 import ContentEditor from './admin/ContentEditor';
+import GalleryEditor from './admin/GalleryEditor';
 
 const App: React.FC = () => {
   return (
@@ -46,14 +47,7 @@ const App: React.FC = () => {
         { name: 'description', label: 'Description', type: 'textarea' },
         { name: 'image_url', label: 'Image URL', type: 'url' },
       ]} /></AdminLayout></AdminGuard>} />
-      <Route path="/admin/gallery" element={<AdminGuard><AdminLayout><ContentEditor tableName="gallery_media" title="Gallery" fields={[
-        { name: 'label', label: 'Label', type: 'text' },
-        { name: 'url', label: 'Media URL', type: 'url' },
-        { name: 'type', label: 'Type', type: 'select', options: [{ label: 'Image', value: 'image' }, { label: 'Video', value: 'video' }] },
-        { name: 'category', label: 'Category', type: 'text' },
-        { name: 'thumbnail', label: 'Thumbnail URL (optional)', type: 'url' },
-        { name: 'display_order', label: 'Display Order (1 is first)', type: 'number' },
-      ]} allowBulkUpload={{ urlField: 'url', defaultValues: { type: 'image', category: 'General', label: 'Gallery Array Upload' } }} /></AdminLayout></AdminGuard>} />
+      <Route path="/admin/gallery" element={<AdminGuard><AdminLayout><GalleryEditor /></AdminLayout></AdminGuard>} />
       <Route path="/admin/enquiries" element={<AdminGuard><AdminLayout><ContentEditor tableName="enquiries" title="Enquiries" fields={[
         { name: 'name', label: 'Name', type: 'text' },
         { name: 'email', label: 'Email', type: 'text' },
