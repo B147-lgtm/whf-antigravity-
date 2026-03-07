@@ -6,11 +6,15 @@ import ImageUpload from './ImageUpload';
 interface ContentEditorProps {
     tableName: string;
     title: string;
-    fields: { name: string; label: string; type: 'text' | 'textarea' | 'url' | 'number' | 'json' }[];
+    fields: { name: string; label: string; type: 'text' | 'textarea' | 'url' | 'number' | 'json' | 'select'; options?: { label: string; value: string }[] }[];
     isSingle?: boolean; // For tables like site_settings with only one row
+    allowBulkUpload?: {
+        urlField: string;
+        defaultValues: Record<string, any>;
+    };
 }
 
-const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields, isSingle = false }) => {
+const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields, isSingle = false, allowBulkUpload }) => {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -63,7 +67,10 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
     };
 
     const handleAddField = () => {
-        const newRow = fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), { id: null });
+        const newRow = fields.reduce((acc, field) => ({
+            ...acc,
+            [field.name]: field.type === 'select' && field.options ? field.options[0].value : ''
+        }), { id: null });
         setData([...data, newRow]);
     };
 
@@ -78,6 +85,52 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
         setUploadModes(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
+    const handleBulkUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!allowBulkUpload || !event.target.files || event.target.files.length === 0) return;
+
+        try {
+            setSaving(true);
+            setError(null);
+            const files = Array.from(event.target.files);
+
+            const uploadPromises = files.map(async (file) => {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+                const filePath = `public/${fileName}`;
+
+                const { error: uploadError } = await supabase!.storage
+                    .from('images')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data: { publicUrl } } = supabase!.storage
+                    .from('images')
+                    .getPublicUrl(filePath);
+
+                return publicUrl;
+            });
+
+            const uploadedUrls = await Promise.all(uploadPromises);
+
+            const insertData = uploadedUrls.map(url => ({
+                ...allowBulkUpload.defaultValues,
+                [allowBulkUpload.urlField]: url
+            }));
+
+            const { error: dbError } = await supabase!.from(tableName).insert(insertData);
+            if (dbError) throw dbError;
+
+            await fetchData();
+            // Reset the file input
+            event.target.value = '';
+        } catch (err: any) {
+            setError(`Bulk upload error: ${err.message}`);
+        } finally {
+            setSaving(false);
+        }
+    };
+
     if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin w-10 h-10 text-amber-500" /></div>;
 
     return (
@@ -85,12 +138,21 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-3xl font-bold text-neutral-900">{title}</h2>
                 {!isSingle && (
-                    <button
-                        onClick={handleAddField}
-                        className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all font-medium"
-                    >
-                        <Plus className="w-4 h-4 mr-2" /> Add New
-                    </button>
+                    <div className="flex space-x-3 items-center">
+                        {allowBulkUpload && (
+                            <label className="flex items-center px-4 py-2 bg-neutral-100 text-neutral-800 rounded-lg hover:bg-neutral-200 border border-neutral-300 transition-all font-medium cursor-pointer">
+                                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2 text-neutral-500" />}
+                                Bulk Upload
+                                <input type="file" multiple accept="image/*" onChange={handleBulkUpload} disabled={saving} className="hidden" />
+                            </label>
+                        )}
+                        <button
+                            onClick={handleAddField}
+                            className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all font-medium"
+                        >
+                            <Plus className="w-4 h-4 mr-2" /> Add New
+                        </button>
+                    </div>
                 )}
             </div>
 
@@ -141,6 +203,16 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
                                                     onUpload={(url) => updateField(index, field.name, url)}
                                                     currentUrl={row[field.name]}
                                                 />
+                                            ) : field.type === 'select' ? (
+                                                <select
+                                                    value={row[field.name] || (field.options?.[0]?.value || '')}
+                                                    onChange={(e) => updateField(index, field.name, e.target.value)}
+                                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-amber-500 outline-none bg-white cursor-pointer"
+                                                >
+                                                    {field.options?.map((opt, i) => (
+                                                        <option key={i} value={opt.value}>{opt.label}</option>
+                                                    ))}
+                                                </select>
                                             ) : (
                                                 <input
                                                     type={field.type === 'number' ? 'number' : 'text'}

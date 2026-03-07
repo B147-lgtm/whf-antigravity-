@@ -1,16 +1,20 @@
-
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { getSiteSettings, SiteSettings } from '../lib/api';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const location = useLocation();
 
   useEffect(() => {
     setIsOpen(false);
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
+
+    getSiteSettings().then(data => setSettings(data));
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location]);
 
@@ -23,27 +27,31 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${
-      scrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'
-    }`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'
+      }`}>
       <div className="max-w-[1800px] mx-auto px-8 md:px-16">
         <div className="flex justify-between items-center">
           <NavLink to="/" className="flex items-center gap-4 group transition-all duration-500">
-            <div className={`relative overflow-hidden rounded-full transition-all duration-700 border-[#D4AF37]/20 ${
-              scrolled ? 'h-10 w-10 border' : 'h-16 w-16 md:h-20 md:w-20 border-2'
-            }`}>
-              <img 
-                src="https://images.unsplash.com/photo-1505533321630-975218a5f66f?auto=format&fit=crop&q=80&w=200&h=200" 
-                alt="Wood Heaven Farms Logo" 
-                className="w-full h-full object-cover grayscale brightness-125 contrast-125 group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-[#1A2F1F]/40 mix-blend-multiply"></div>
-              <div className="absolute inset-0 border-[1px] border-[#D4AF37]/40 rounded-full"></div>
-            </div>
-            
-            <div className={`hidden lg:flex flex-col transition-opacity duration-500 ${
-              scrolled || location.pathname !== '/' ? 'opacity-100' : 'opacity-0'
-            }`}>
+            {settings?.brand_logo_url ? (
+              <div className={`relative overflow-hidden transition-all duration-700 ${scrolled ? 'h-10' : 'h-16 md:h-20'
+                }`}>
+                <img
+                  src={settings.brand_logo_url}
+                  alt="Wood Heaven Farms Logo"
+                  className="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+            ) : (
+              <div className={`relative overflow-hidden rounded-full transition-all duration-700 border-[#D4AF37]/20 ${scrolled ? 'h-10 w-10 border' : 'h-16 w-16 md:h-20 md:w-20 border-2'
+                }`}>
+                <div className="w-full h-full bg-[#1A2F1F] flex items-center justify-center">
+                  <span className="text-[#D4AF37] font-serif font-bold text-xl">W</span>
+                </div>
+              </div>
+            )}
+
+            <div className={`hidden lg:flex flex-col transition-opacity duration-500 ${scrolled || location.pathname !== '/' ? 'opacity-100' : 'opacity-0'
+              }`}>
               <span className="text-[10px] font-serif font-bold tracking-[0.2em] text-[#1A2F1F] uppercase">Wood Heaven</span>
               <span className="text-[8px] tracking-[0.4em] text-[#D4AF37] uppercase -mt-1">Farms</span>
             </div>
@@ -55,10 +63,9 @@ const Navbar: React.FC = () => {
                 key={link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `text-[10px] uppercase tracking-[0.4em] font-bold transition-all ${
-                    isActive 
-                      ? 'text-[#D4AF37]' 
-                      : (scrolled || location.pathname !== '/' ? 'text-[#1A2F1F]/60 hover:text-[#1A2F1F]' : 'text-white/60 hover:text-white')
+                  `text-[10px] uppercase tracking-[0.4em] font-bold transition-all ${isActive
+                    ? 'text-[#D4AF37]'
+                    : (scrolled || location.pathname !== '/' ? 'text-[#1A2F1F]/60 hover:text-[#1A2F1F]' : 'text-white/60 hover:text-white')
                   }`
                 }
               >
@@ -68,9 +75,8 @@ const Navbar: React.FC = () => {
           </div>
 
           <button
-            className={`md:hidden p-2 transition-colors ${
-              scrolled || location.pathname !== '/' ? 'text-[#1A2F1F]' : 'text-white'
-            }`}
+            className={`md:hidden p-2 transition-colors ${scrolled || location.pathname !== '/' ? 'text-[#1A2F1F]' : 'text-white'
+              }`}
             onClick={() => setIsOpen(!isOpen)}
           >
             <div className="w-6 h-4 flex flex-col justify-between items-end">
@@ -83,9 +89,8 @@ const Navbar: React.FC = () => {
       </div>
 
       <div
-        className={`fixed inset-0 bg-[#1A2F1F] z-[60] transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-0 bg-[#1A2F1F] z-[60] transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex flex-col h-full p-16 pt-32">
           <button onClick={() => setIsOpen(false)} className="absolute top-8 right-8 text-white/40 uppercase tracking-[0.4em] text-[10px]">Close</button>
@@ -96,8 +101,7 @@ const Navbar: React.FC = () => {
                 to={link.path}
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
-                  `text-4xl font-serif transition-all ${
-                    isActive ? 'text-[#D4AF37] pl-8' : 'text-white/40 hover:text-white hover:pl-8'
+                  `text-4xl font-serif transition-all ${isActive ? 'text-[#D4AF37] pl-8' : 'text-white/40 hover:text-white hover:pl-8'
                   }`
                 }
               >

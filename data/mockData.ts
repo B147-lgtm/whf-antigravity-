@@ -5,6 +5,7 @@ export const SITE_SETTINGS = {
   hero_title: 'wood heaven Farms',
   hero_subtitle: 'Private Luxury farmhouse stay and event estate',
   hero_bg_url: 'https://images.unsplash.com/photo-1536431311719-398b6704d40f?auto=format&fit=crop&q=80&w=2000',
+  brand_logo_url: 'https://images.unsplash.com/photo-1505533321630-975218a5f66f?auto=format&fit=crop&q=80&w=200&h=200',
   whatsapp_number: '918852021119',
   whatsapp_prefill: 'Hi Wood Heaven Farms, I want to enquire about a booking.'
 };

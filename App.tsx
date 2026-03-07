@@ -32,6 +32,7 @@ const App: React.FC = () => {
         { name: 'hero_subtitle', label: 'Hero Subtitle', type: 'text' },
         { name: 'hero_bg_url', label: 'Hero Background URL', type: 'url' },
         { name: 'teaser_bg_url', label: 'Teaser Video Background URL', type: 'url' },
+        { name: 'brand_logo_url', label: 'Brand Logo URL', type: 'url' },
         { name: 'whatsapp_number', label: 'WhatsApp Number', type: 'text' },
         { name: 'whatsapp_prefill', label: 'WhatsApp Prefill Message', type: 'textarea' },
       ]} /></AdminLayout></AdminGuard>} />
@@ -47,10 +48,10 @@ const App: React.FC = () => {
       <Route path="/admin/gallery" element={<AdminGuard><AdminLayout><ContentEditor tableName="gallery_media" title="Gallery" fields={[
         { name: 'label', label: 'Label', type: 'text' },
         { name: 'url', label: 'Media URL', type: 'url' },
-        { name: 'type', label: 'Type (image/video)', type: 'text' },
+        { name: 'type', label: 'Type', type: 'select', options: [{ label: 'Image', value: 'image' }, { label: 'Video', value: 'video' }] },
         { name: 'category', label: 'Category', type: 'text' },
         { name: 'thumbnail', label: 'Thumbnail URL (optional)', type: 'url' },
-      ]} /></AdminLayout></AdminGuard>} />
+      ]} allowBulkUpload={{ urlField: 'url', defaultValues: { type: 'image', category: 'General', label: 'Gallery Array Upload' } }} /></AdminLayout></AdminGuard>} />
       <Route path="/admin/enquiries" element={<AdminGuard><AdminLayout><ContentEditor tableName="enquiries" title="Enquiries" fields={[
         { name: 'name', label: 'Name', type: 'text' },
         { name: 'email', label: 'Email', type: 'text' },
