@@ -52,6 +52,7 @@ const App: React.FC = () => {
         { name: 'type', label: 'Type', type: 'select', options: [{ label: 'Image', value: 'image' }, { label: 'Video', value: 'video' }] },
         { name: 'category', label: 'Category', type: 'text' },
         { name: 'thumbnail', label: 'Thumbnail URL (optional)', type: 'url' },
+        { name: 'display_order', label: 'Display Order (1 is first)', type: 'number' },
       ]} allowBulkUpload={{ urlField: 'url', defaultValues: { type: 'image', category: 'General', label: 'Gallery Array Upload' } }} /></AdminLayout></AdminGuard>} />
       <Route path="/admin/enquiries" element={<AdminGuard><AdminLayout><ContentEditor tableName="enquiries" title="Enquiries" fields={[
         { name: 'name', label: 'Name', type: 'text' },

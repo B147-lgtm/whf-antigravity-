@@ -6,6 +6,7 @@ export interface GalleryItem {
   category: 'Presidential Suite' | 'Bedrooms' | 'Pool' | 'Lawns' | 'Events' | 'Bar Garden' | 'Living Area';
   label: string;
   thumbnail?: string; // Optional custom thumbnail for videos
+  display_order?: number;
 }
 
 export interface Experience {

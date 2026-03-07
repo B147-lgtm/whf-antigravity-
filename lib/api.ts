@@ -108,7 +108,11 @@ export const getGalleryMedia = async (category?: string) => {
     if (category && category !== 'All') {
       query = query.eq('category', category);
     }
-    const response: any = await withTimeout(query.order('created_at', { ascending: false }));
+    const response: any = await withTimeout(
+      query
+        .order('display_order', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: false })
+    );
     const { data, error } = response;
     if (error || !data) return GALLERY_ITEMS;
     return data;

@@ -42,6 +42,7 @@ CREATE TABLE gallery_media (
     category TEXT NOT NULL,
     label TEXT NOT NULL,
     thumbnail TEXT,
+    display_order INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
