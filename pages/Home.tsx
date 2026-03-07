@@ -4,10 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { getSiteSettings, getHomeHighlights, getExperiences, getTestimonials } from '../lib/api';
 
+// Helper to extract YouTube video ID from various URL formats
+const getYouTubeId = (url: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+};
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<any>(null);
@@ -183,19 +192,23 @@ const Home: React.FC = () => {
 
       {/* Video Teaser Section */}
       <section className="py-24 px-8 md:px-16">
-        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer" onClick={() => navigate('/gallery')}>
+        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer" onClick={() => settings?.youtube_video_url ? setShowVideo(true) : navigate('/gallery')}>
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] group-hover:scale-105"
             style={{ backgroundImage: `url("${settings?.teaser_bg_url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000'}")` }}
           ></div>
           <div className="absolute inset-0 bg-[#1A2F1F]/40 flex flex-col items-center justify-center text-center p-8">
             <div className="w-20 h-20 rounded-full border border-white/40 flex items-center justify-center mb-8 bg-white/10 backdrop-blur-md group-hover:scale-110 transition-transform">
-              <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              <svg className="w-8 h-8 text-white fill-current translate-x-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
             <h3 className="text-white text-3xl md:text-6xl font-editorial mb-4">A Glimpse of Paradise</h3>
             <p className="text-white/60 text-[10px] uppercase tracking-[0.5em] mb-8 font-bold">Press to view film</p>
-            <Button variant="outline" className="text-white border-white/40" onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); navigate('/gallery'); }}>
-              View Gallery
+            <Button variant="outline" className="text-white border-white/40" onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              if (settings?.youtube_video_url) setShowVideo(true);
+              else navigate('/gallery');
+            }}>
+              {settings?.youtube_video_url ? 'Watch Story' : 'View Gallery'}
             </Button>
           </div>
         </div>
@@ -221,6 +234,31 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      {/* YouTube Video Overlay */}
+      {showVideo && settings?.youtube_video_url && (
+        <div
+          className="fixed inset-0 z-[100] bg-[#1A2F1F]/98 flex items-center justify-center p-4 md:p-12 animate-fade-in"
+          onClick={() => setShowVideo(false)}
+        >
+          <button className="absolute top-10 right-10 text-white/60 hover:text-white transition-colors z-[110]">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="relative w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${getYouTubeId(settings.youtube_video_url)}?autoplay=1&rel=0`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0"
+            ></iframe>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

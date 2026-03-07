@@ -33,6 +33,7 @@ const App: React.FC = () => {
         { name: 'hero_bg_url', label: 'Hero Background URL', type: 'url' },
         { name: 'teaser_bg_url', label: 'Teaser Video Background URL', type: 'url' },
         { name: 'brand_logo_url', label: 'Brand Logo URL', type: 'url' },
+        { name: 'youtube_video_url', label: 'Home Page YouTube Video URL', type: 'url' },
         { name: 'whatsapp_number', label: 'WhatsApp Number', type: 'text' },
         { name: 'whatsapp_prefill', label: 'WhatsApp Prefill Message', type: 'textarea' },
       ]} /></AdminLayout></AdminGuard>} />

@@ -10,12 +10,13 @@ CREATE TABLE site_settings (
     whatsapp_prefill TEXT NOT NULL,
     teaser_bg_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000',
     brand_logo_url TEXT DEFAULT '',
+    youtube_video_url TEXT DEFAULT '',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Insert initial mock data
-INSERT INTO site_settings (id, hero_title, hero_subtitle, hero_bg_url, whatsapp_number, whatsapp_prefill, teaser_bg_url, brand_logo_url)
-VALUES (1, 'wood heaven Farms', 'Private Luxury farmhouse stay and event estate', 'https://images.unsplash.com/photo-1536431311719-398b6704d40f?auto=format&fit=crop&q=80&w=2000', '918852021119', 'Hi Wood Heaven Farms, I want to enquire about a booking.', 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000', 'https://images.unsplash.com/photo-1505533321630-975218a5f66f?auto=format&fit=crop&q=80&w=200&h=200')
+INSERT INTO site_settings (id, hero_title, hero_subtitle, hero_bg_url, whatsapp_number, whatsapp_prefill, teaser_bg_url, brand_logo_url, youtube_video_url)
+VALUES (1, 'wood heaven Farms', 'Private Luxury farmhouse stay and event estate', 'https://images.unsplash.com/photo-1536431311719-398b6704d40f?auto=format&fit=crop&q=80&w=2000', '918852021119', 'Hi Wood Heaven Farms, I want to enquire about a booking.', 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000', 'https://images.unsplash.com/photo-1505533321630-975218a5f66f?auto=format&fit=crop&q=80&w=200&h=200', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Location Settings

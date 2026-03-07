@@ -7,6 +7,7 @@ export interface SiteSettings {
   hero_bg_url: string;
   teaser_bg_url: string;
   brand_logo_url?: string;
+  youtube_video_url?: string;
   whatsapp_number: string;
   whatsapp_prefill: string;
 }
