@@ -223,6 +223,22 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ tableName, title, fields,
                                                     placeholder={isUrlField ? 'https://example.com/image.jpg' : ''}
                                                 />
                                             )}
+
+                                            {/* Image Preview for URL fields */}
+                                            {isUrlField && row[field.name] && (
+                                                <div className="mt-3 relative w-32 h-20 rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 flex items-center justify-center">
+                                                    <img
+                                                        src={row[field.name]}
+                                                        alt="Preview"
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            // Hide broken images if URL isn't actually an image (like a youtube link)
+                                                            e.currentTarget.style.display = 'none';
+                                                            e.currentTarget.parentElement?.classList.add('hidden');
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}

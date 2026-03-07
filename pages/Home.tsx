@@ -192,11 +192,13 @@ const Home: React.FC = () => {
 
       {/* Video Teaser Section */}
       <section className="py-24 px-8 md:px-16">
-        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer" onClick={() => settings?.youtube_video_url ? setShowVideo(true) : navigate('/gallery')}>
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] group-hover:scale-105"
-            style={{ backgroundImage: `url("${settings?.teaser_bg_url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80&w=2000'}")` }}
-          ></div>
+        <div className={`max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer ${!settings?.teaser_bg_url ? 'bg-[#1A2F1F]' : ''}`} onClick={() => settings?.youtube_video_url ? setShowVideo(true) : navigate('/gallery')}>
+          {settings?.teaser_bg_url && (
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] group-hover:scale-105"
+              style={{ backgroundImage: `url("${settings.teaser_bg_url}")` }}
+            ></div>
+          )}
           <div className="absolute inset-0 bg-[#1A2F1F]/40 flex flex-col items-center justify-center text-center p-8">
             <div className="w-20 h-20 rounded-full border border-white/40 flex items-center justify-center mb-8 bg-white/10 backdrop-blur-md group-hover:scale-110 transition-transform">
               <svg className="w-8 h-8 text-white fill-current translate-x-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
