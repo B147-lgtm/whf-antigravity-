@@ -177,10 +177,10 @@ const Home: React.FC = () => {
                   <img src={exp.image_url} alt={exp.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-black/20"></div>
                 </div>
-                <div>
+                <div className="flex flex-col flex-grow">
                   <h3 className="text-xl font-editorial mb-3 text-[#D4AF37]">{exp.title}</h3>
-                  <p className="text-gray-400 text-xs font-light mb-8 leading-relaxed h-12 overflow-hidden">{exp.description}</p>
-                  <Button variant="outline" className="text-white border-white/20 w-full py-3" onClick={() => navigate('/enquiry')}>
+                  <p className="text-gray-400 text-xs font-light mb-8 leading-relaxed">{exp.description}</p>
+                  <Button variant="outline" className="text-white border-white/20 w-full py-3 mt-auto" onClick={() => navigate('/enquiry')}>
                     Enquire
                   </Button>
                 </div>
