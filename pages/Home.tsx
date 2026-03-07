@@ -192,8 +192,11 @@ const Home: React.FC = () => {
 
       {/* Video Teaser Section */}
       <section className="py-24 px-8 md:px-16">
-        <div className={`max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer ${!settings?.teaser_bg_url ? 'bg-[#1A2F1F]' : ''}`} onClick={() => settings?.youtube_video_url ? setShowVideo(true) : navigate('/gallery')}>
-          {settings?.teaser_bg_url && (
+        <div
+          className={`max-w-7xl mx-auto rounded-3xl overflow-hidden relative h-[500px] luxury-shadow group cursor-pointer ${(!settings?.teaser_bg_url || settings.teaser_bg_url.includes('unsplash.com/photo-1542718610')) ? 'bg-[#1A2F1F]' : ''}`}
+          onClick={() => settings?.youtube_video_url ? setShowVideo(true) : navigate('/gallery')}
+        >
+          {settings?.teaser_bg_url && !settings.teaser_bg_url.includes('unsplash.com/photo-1542718610') && (
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] group-hover:scale-105"
               style={{ backgroundImage: `url("${settings.teaser_bg_url}")` }}
@@ -203,7 +206,7 @@ const Home: React.FC = () => {
             <div className="w-20 h-20 rounded-full border border-white/40 flex items-center justify-center mb-8 bg-white/10 backdrop-blur-md group-hover:scale-110 transition-transform">
               <svg className="w-8 h-8 text-white fill-current translate-x-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
-            <h3 className="text-white text-3xl md:text-6xl font-editorial mb-4">A Glimpse of Paradise</h3>
+            <h3 className="text-white text-4xl md:text-5xl font-sans font-semibold tracking-wide mb-4">A Glimpse of Paradise</h3>
             <p className="text-white/60 text-[10px] uppercase tracking-[0.5em] mb-8 font-bold">Press to view film</p>
             <Button variant="outline" className="text-white border-white/40" onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
@@ -219,17 +222,24 @@ const Home: React.FC = () => {
       {/* Trust Strip / Testimonials */}
       <section className="py-32 bg-[#FDFCFB]">
         <div className="max-w-7xl mx-auto px-8 md:px-16 text-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {testimonials.map((t) => (
-              <div key={t.id} className="flex flex-col items-center">
-                <div className="flex justify-center gap-1 mb-6">
-                  {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></div>)}
+              <div key={t.id} className="flex flex-col items-center bg-white p-10 rounded-3xl shadow-sm border border-black/[0.03] h-full hover:shadow-lg transition-shadow duration-500">
+                <div className="flex justify-center gap-1 mb-8">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <svg key={i} className="w-4 h-4 text-[#D4AF37] fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                  ))}
                 </div>
-                <p className="text-2xl font-editorial italic text-[#1A2F1F] mb-6 leading-relaxed">
+                <p className="text-lg md:text-xl font-editorial italic text-gray-700 mb-8 leading-relaxed flex-grow flex items-center text-center">
                   "{t.text}"
                 </p>
-                <div className="text-[10px] font-bold tracking-[0.4em] uppercase text-gray-400">
-                  {t.name}
+                <div className="mt-auto">
+                  <div className="w-8 h-[1px] bg-[#D4AF37]/50 mx-auto mb-4"></div>
+                  <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A2F1F]">
+                    {t.name}
+                  </div>
                 </div>
               </div>
             ))}
