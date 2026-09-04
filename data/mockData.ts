@@ -8,7 +8,10 @@ export const SITE_SETTINGS = {
   brand_logo_url: 'https://images.unsplash.com/photo-1505533321630-975218a5f66f?auto=format&fit=crop&q=80&w=200&h=200',
   youtube_video_url: 'https://www.youtube.com/shorts/IIOHgt6xvDo',
   whatsapp_number: '918852021119',
-  whatsapp_prefill: 'Hi Wood Heaven Farms, I want to enquire about a booking.'
+  whatsapp_prefill: 'Hi Wood Heaven Farms, I want to enquire about a booking.',
+  instagram_url: 'https://www.instagram.com/woodheavenfarms/',
+  maps_url: 'https://google.com/maps?um=1&ie=UTF-8&fb=1&gl=in&sa=X&geocode=KWd0ZOpbrW05MeTQhrW2fHnM&daddr=Khasra+No+530,621,+622,+Sikar+Rd,+opposite+ASHIANA+GREENS,+near+Suncity,+Jaipur,+Rajasthan+302013',
+  airbnb_url: 'https://www.airbnb.co.in/rooms/910145959184121862'
 };
 
 export const LOCATION_SETTINGS = {
