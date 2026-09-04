@@ -21,6 +21,7 @@ const Footer: React.FC = () => {
             <NavLink to="/estate" className="text-sm font-light text-gray-400 hover:text-white transition-colors">The Estate Guide</NavLink>
             <NavLink to="/location" className="text-sm font-light text-gray-400 hover:text-white transition-colors">Location</NavLink>
             <NavLink to="/enquiry" className="text-sm font-light text-gray-400 hover:text-white transition-colors">Enquiry</NavLink>
+            <NavLink to="/connect" className="text-sm font-light text-gray-400 hover:text-white transition-colors">Connect With Us</NavLink>
           </div>
         </div>
 

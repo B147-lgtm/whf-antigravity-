@@ -8,9 +8,13 @@ import FloatingActions from './FloatingActions';
 
 interface LayoutProps {
   children: React.ReactNode;
+  // The Connect page already presents full-size WhatsApp/Instagram cards,
+  // so the floating shortcuts and mobile CTA bar would just duplicate
+  // (and visually overlap) those same actions there.
+  hideOverlays?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, hideOverlays = false }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollProgress />
@@ -19,8 +23,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       <Footer />
-      <MobileCTA />
-      <FloatingActions />
+      {!hideOverlays && <MobileCTA />}
+      {!hideOverlays && <FloatingActions />}
     </div>
   );
 };
