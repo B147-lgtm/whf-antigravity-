@@ -10,6 +10,9 @@ export interface SiteSettings {
   youtube_video_url?: string;
   whatsapp_number: string;
   whatsapp_prefill: string;
+  instagram_url?: string;
+  maps_url?: string;
+  airbnb_url?: string;
 }
 
 export interface ContactMessage {
