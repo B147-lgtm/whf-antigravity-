@@ -10,6 +10,7 @@ import Gallery from './pages/Gallery';
 import Estate from './pages/Estate';
 import Location from './pages/Location';
 import Enquiry from './pages/Enquiry';
+import Connect from './pages/Connect';
 import Login from './admin/Login';
 import Dashboard from './admin/Dashboard';
 import ContentEditor from './admin/ContentEditor';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
       <Route path="/estate" element={<SupabaseGuard><Layout><Estate /></Layout></SupabaseGuard>} />
       <Route path="/location" element={<SupabaseGuard><Layout><Location /></Layout></SupabaseGuard>} />
       <Route path="/enquiry" element={<SupabaseGuard><Layout><Enquiry /></Layout></SupabaseGuard>} />
+      <Route path="/connect" element={<SupabaseGuard><Layout hideOverlays><Connect /></Layout></SupabaseGuard>} />
 
       {/* Admin Routes */}
       <Route path="/admin/login" element={<Login />} />
@@ -37,6 +39,9 @@ const App: React.FC = () => {
         { name: 'youtube_video_url', label: 'Home Page YouTube Video URL', type: 'url' },
         { name: 'whatsapp_number', label: 'WhatsApp Number', type: 'text' },
         { name: 'whatsapp_prefill', label: 'WhatsApp Prefill Message', type: 'textarea' },
+        { name: 'instagram_url', label: 'Instagram URL', type: 'url' },
+        { name: 'maps_url', label: 'Google Maps URL', type: 'url' },
+        { name: 'airbnb_url', label: 'Airbnb Listing URL', type: 'url' },
       ]} /></AdminLayout></AdminGuard>} />
       <Route path="/admin/testimonials" element={<AdminGuard><AdminLayout><ContentEditor tableName="testimonials" title="Testimonials" fields={[
         { name: 'name', label: 'Name', type: 'text' },
@@ -80,6 +85,7 @@ const App: React.FC = () => {
         { name: 'page_name', label: 'Page', type: 'text' },
         { name: 'section_key', label: 'Section ID', type: 'text' },
         { name: 'title', label: 'Title', type: 'text' },
+        { name: 'subtitle', label: 'Subtitle / Tagline', type: 'text' },
         { name: 'description', label: 'Description', type: 'textarea' },
         { name: 'image_url', label: 'Image URL', type: 'url' },
       ]} /></AdminLayout></AdminGuard>} />
